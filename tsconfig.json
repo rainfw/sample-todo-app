@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "@rainfw/core",
+		"types": ["@cloudflare/workers-types"],
+		"outDir": "dist",
+		"rootDir": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		".rainjs/**/*.ts",
+		"worker-configuration.d.ts"
+	],
+	"exclude": ["node_modules"]
+}

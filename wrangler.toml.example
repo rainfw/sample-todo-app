@@ -1,0 +1,17 @@
+name = "sample-todo"
+main = ".rainjs/entry.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sample-todo-db"
+database_id = "<YOUR_DATABASE_ID>"
+
+# [rain:alias:start]
+[alias]
+"./src/routes/(components)/todo-list" = "./.rainjs/islands/routes/(components)/todo-list.ts"
+# [rain:alias:end]
