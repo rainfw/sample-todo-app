@@ -1,31 +1,32 @@
 {
-  "name": "sample-todo",
-  "version": "1.0.0",
-  "description": "Sample TODO app built with Rain.js + Cloudflare D1",
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "dev": "npx rainjs dev",
-    "build": "npx rainjs build",
-    "db:init": "npx rainjs db init",
-    "db:generate": "npx rainjs db generate",
-    "db:push": "npx rainjs db push",
-    "db:apply-local": "npx rainjs db apply-local",
-    "check": "biome check .",
-    "check:fix": "biome check --fix .",
-    "format": "biome format --write ."
-  },
-  "dependencies": {
-    "@rainfw/core": "^0.2.13",
-    "drizzle-orm": "^0.45.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.4.9",
-    "@cloudflare/workers-types": "^4.20260317.1",
-    "drizzle-kit": "^0.31.10",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.76.0"
-  }
+	"name": "sample-todo",
+	"version": "1.0.0",
+	"description": "Sample TODO app built with Rain.js + Cloudflare D1",
+	"license": "ISC",
+	"author": "",
+	"type": "commonjs",
+	"main": "index.js",
+	"scripts": {
+		"dev": "npx rainjs dev",
+		"build": "npx rainjs build",
+		"db:init": "npx rainjs db init",
+		"db:generate": "npx rainjs db generate",
+		"db:push": "npx rainjs db push",
+		"db:apply-local": "npx rainjs db apply-local",
+		"check": "biome check .",
+		"check:fix": "biome check --fix .",
+		"format": "biome format --write ."
+	},
+	"dependencies": {
+		"@img/sharp-darwin-arm64": "^0.34.5",
+		"@rainfw/core": "^0.2.14",
+		"drizzle-orm": "^0.45.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.9",
+		"@cloudflare/workers-types": "^4.20260317.1",
+		"drizzle-kit": "^0.31.10",
+		"typescript": "^5.9.3",
+		"wrangler": "^4.76.0"
+	}
 }

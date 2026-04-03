@@ -8,52 +8,68 @@ type Todo = {
 	completed: boolean;
 };
 
-export default function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
+type Props = {
+	initialTodos: Todo[];
+	addTodo: (formData: FormData) => Promise<void>;
+	toggleTodo: (formData: FormData) => Promise<void>;
+	removeTodo: (formData: FormData) => Promise<void>;
+};
+
+export default function TodoList({
+	initialTodos,
+	addTodo,
+	toggleTodo,
+	removeTodo,
+}: Props) {
 	const [todos, setTodos] = useState<Todo[]>(initialTodos);
 	const [title, setTitle] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 
 	const completed = todos.filter((t: Todo) => t.completed).length;
 
-	async function refresh() {
-		const res = await fetch("/api/todos");
-		setTodos(await res.json());
-	}
-
-	async function addTodo(e: Event) {
+	async function handleAdd(e: Event) {
 		e.preventDefault();
 		if (!title.trim() || submitting) return;
 		setSubmitting(true);
 		try {
-			await fetch("/api/todos", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ title: title.trim() }),
-			});
+			const formData = new FormData();
+			formData.set("title", title.trim());
+			await addTodo(formData);
 			setTitle("");
-			await refresh();
+			// 楽観的更新: サーバーから返る前にUIを更新
+			setTodos((prev: Todo[]) => [
+				...prev,
+				{
+					id: Date.now(),
+					title: title.trim(),
+					completed: false,
+				},
+			]);
 		} finally {
 			setSubmitting(false);
 		}
 	}
 
-	async function toggle(id: number, checked: boolean) {
-		await fetch(`/api/todos/${id}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ completed: checked }),
-		});
-		await refresh();
+	async function handleToggle(id: number, checked: boolean) {
+		const formData = new FormData();
+		formData.set("id", String(id));
+		formData.set("completed", String(checked));
+		await toggleTodo(formData);
+		setTodos((prev: Todo[]) =>
+			prev.map((t: Todo) => (t.id === id ? { ...t, completed: checked } : t)),
+		);
 	}
 
-	async function remove(id: number) {
-		await fetch(`/api/todos/${id}`, { method: "DELETE" });
-		await refresh();
+	async function handleRemove(id: number) {
+		const formData = new FormData();
+		formData.set("id", String(id));
+		await removeTodo(formData);
+		setTodos((prev: Todo[]) => prev.filter((t: Todo) => t.id !== id));
 	}
 
 	return (
 		<div className="todo-inner">
-			<form onSubmit={addTodo} className="add-form">
+			<form onSubmit={handleAdd} className="add-form">
 				<input
 					value={title}
 					onInput={(e: Event) => setTitle((e.target as HTMLInputElement).value)}
@@ -74,7 +90,7 @@ export default function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
 								type="checkbox"
 								checked={todo.completed}
 								onChange={(e: Event) =>
-									toggle(todo.id, (e.target as HTMLInputElement).checked)
+									handleToggle(todo.id, (e.target as HTMLInputElement).checked)
 								}
 							/>
 							<span className={`title${todo.completed ? " completed" : ""}`}>
@@ -82,7 +98,7 @@ export default function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
 							</span>
 							<button
 								type="button"
-								onClick={() => remove(todo.id)}
+								onClick={() => handleRemove(todo.id)}
 								className="delete-btn"
 							>
 								✕
